@@ -82,12 +82,16 @@
         }
       }
 
+      function initializeCallBack(){
+        applyGetFilters();
+      }
+
       var map;
       var initMarkers = [];
       var markers = [];
 
       // Google map initialization
-      function initialize() {
+      function initialize(callBack) {
         var lat = new google.maps.LatLng(47.56109365945179,-75.8935546875);
         var mapOptions = {
           center: lat,
@@ -99,16 +103,14 @@
         map.setMapTypeId("watercolor");
 
         var markers = Drupal.settings.entity_locator.markers;
-        initMarkers = markers;      
-        //console.log(markers);
+        initMarkers = markers;   
 
         // Set markers
         $.each(markers, function(index, value) {
           addMarker(value); 
         })
 
-        //setmarkers(map);
-        applyGetFilters();
+        callBack();
       }
 
       function addMarker(data){
@@ -170,8 +172,9 @@
             })
           })
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
+      google.maps.event.addDomListener(window, 'load', initialize(initializeCallBack));
     }
+
   };
 })(jQuery);
 
