@@ -40,9 +40,9 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   $api_key = variable_get('entity_locator_gmap_api_key', '');
   drupal_add_js('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&sensor=true');
   drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator.js');
-  
-  // @todo Active watercolor
-  //drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
+  if($conf['map_type'] != 'original'){
+    drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
+  }
 
   // Get the bundle from the pane configuration
   $values = array_values($conf['node_types']);
@@ -68,7 +68,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   }
 
   // Add Drupal Behaviour
-  $setting = array('entity_locator' => array('markers' => $markers, 'bundle' => $bundle, 'get_params' => drupal_get_query_parameters()));
+  $setting = array('entity_locator' => array('markers' => $markers, 'bundle' => $bundle, 'get_params' => drupal_get_query_parameters(), 'map_type' => $conf['map_type']));
   drupal_add_js($setting, 'setting');
 
   //Display the map
@@ -153,6 +153,21 @@ function locator_content_type_edit_form($form, &$form_state) {
     '#required' => FALSE,
   );
 
+  $map_types = array(
+    'original' => 'Original',
+    'watercolor' => 'Watercolor',
+    'toner' => 'Toner',
+  );
+
+  $form['map_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Select the map type'),
+    '#description' => t('Set the map type of your gmaps'),
+    '#options' => $map_types ,
+    '#default_value' => !empty($conf['map_type']) ? $conf['map_type'] : 'original',
+    '#required' => FALSE,
+  );
+
   return $form;
 }
 
@@ -162,4 +177,5 @@ function locator_content_type_edit_form($form, &$form_state) {
 function locator_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['node_types'] = $form_state['values']['node_types'];
   $form_state['conf']['node_category'] = $form_state['values']['node_category'];
+  $form_state['conf']['map_type'] = $form_state['values']['map_type'];
 }

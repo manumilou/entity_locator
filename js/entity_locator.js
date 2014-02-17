@@ -100,9 +100,12 @@
 
         map = new google.maps.Map(document.getElementById("entity_locator"), mapOptions);
 
-        // @todo Active watercolor
-        //map.mapTypes.set("watercolor", new google.maps.StamenMapType("watercolor"));
-        //map.setMapTypeId("watercolor");
+        var map_type =  Drupal.settings.entity_locator.map_type;       
+        if(map_type != 'original'){
+          map.mapTypes.set(map_type, new google.maps.StamenMapType(map_type));
+          map.setMapTypeId(map_type);
+        }
+
 
         var markers = Drupal.settings.entity_locator.markers;
         initMarkers = markers;   
