@@ -89,9 +89,11 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   
   //Add filters
   $list .= '<div id="filters" class="clearfix">' . t('Trier par') . ' : ';
-  $houses = EntityLocator::houses();
-  foreach($houses as $house) {
-     $list .= '<input type="checkbox" checked="checked" name="pt-'.$house->tid.'" id="pt-'.$house->tid.'" class="css-checkbox" /><label for="pt-'.$house->tid.'" class="css-label">'.$house->name.'</label>';
+  
+
+  $categories = $entityLocator->get_categories($conf['node_category']);
+  foreach($categories as $category) {
+     $list .= '<input type="checkbox" checked="checked" name="pt-'.$category->tid.'" id="pt-'.$category->tid.'" class="css-checkbox" /><label for="pt-'.$category->tid.'" class="css-label">'.$category->name.'</label>';
   }
   $list .= '</div>';
   
@@ -110,7 +112,6 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   $list .= '</div>';
 
   $block->content = $map . $list;
-
   return $block;
 }
 
@@ -134,6 +135,23 @@ function locator_content_type_edit_form($form, &$form_state) {
     '#default_value' => !empty($conf['node_types']) ? $conf['node_types'] : '',
   );
 
+  $vocabulary = taxonomy_get_vocabularies();
+  $checklist_vocab_array = array();
+  foreach ($vocabulary as $item) {
+    $key = $item->machine_name;
+    $value = $item->name;
+    $checklist_vocab_array[$key] = $value;
+  }
+
+  $form['node_category'] = array(
+    '#type' => 'select',
+    '#title' => t('Select the Taxonomy'),
+    '#description' => t('Set the id of the Taxonomy who used for categorized nodes.'),
+    '#options' => $checklist_vocab_array ,
+    '#default_value' => !empty($conf['node_category']) ? $conf['node_category'] : '',
+    '#required' => FALSE,
+  );
+
   return $form;
 }
 
@@ -142,4 +160,5 @@ function locator_content_type_edit_form($form, &$form_state) {
  */
 function locator_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['node_types'] = $form_state['values']['node_types'];
+  $form_state['conf']['node_category'] = $form_state['values']['node_category'];
 }

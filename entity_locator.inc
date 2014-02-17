@@ -103,19 +103,18 @@ class EntityLocator{
    * @return
    *  An array of taxonomy terms entities representing houses, keyed by their identifier.
    */
-  public static function houses() {
-    $houses = &drupal_static(__FUNCTION__);
-    if(!isset($houses)) {
-      if($cache = cache_get('entity_locator_houses_list')) {
-        $houses = $cache->data;
+  public function get_categories($category_name) {
+    $categories = &drupal_static(__FUNCTION__);
+    if(!isset($categories)) {
+      if($cache = cache_get('entity_locator_' .$category_name. '_list')) {
+        $categories = $cache->data;
       }
       else {
-        // Generate entire tree
-        $vocabulary = taxonomy_vocabulary_machine_name_load('houses');
-        $houses = taxonomy_get_tree($vocabulary->vid, 0, NULL, FALSE);
-        cache_set('entity_locator_houses_list', $houses, 'cache');
+        $vocabulary = taxonomy_vocabulary_machine_name_load($category_name);
+        $categories = taxonomy_get_tree($vocabulary->vid, 0, NULL, FALSE);
+        cache_set('entity_locator_' .$category_name. '_list', $categories, 'cache');
       }
     }
-    return $houses;
+    return $categories;
   }
 }
