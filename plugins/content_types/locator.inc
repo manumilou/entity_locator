@@ -104,7 +104,8 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
       $list .= '<div class="warper">';
       foreach($entities as $entity) {
         $build = node_view($entity, 'teaser');
-        $list .= drupal_render($build);
+        $entityWrapper = entity_metadata_wrapper('node', $entity);
+        $list .= '<article data-pt="pt-'.$entityWrapper->field_type->getIdentifier().'" data-pc="pc-'. strtoupper($build['locations']['#locations'][0]['country']) .'" >'. drupal_render($build) .'</article>';
       }
       $list .= '</div>';
     $list .= '</div>';
