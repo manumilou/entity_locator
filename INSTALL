@@ -1,0 +1,29 @@
+INSTALL
+-------
+
+- Installer le module ainsi que les dépendances
+	- Entity locator
+		- Il est possible de renseigner une clés api google
+	- Location
+		- Vous pouvez choisir le pays zoomer par défaut
+		- Dans la configuration du module, pour géocoder les emplacements, dans l'onglets "geocoding options" activer pour chaque pays
+
+--------------Configuration de la structure du contenu
+
+- Créer une Taxonomy pour catégoriser le contenu
+- Créer le content type
+	- Dans la configuration, dans l'onglet Locative information, 
+		- number of locations, choose 1 for Minimum number of locations
+		- Set City,	State/Province, Postal code to Allow
+
+	- Ajouter un champs avec un "MACHINE NAME" = "filed_type" de type "Term reference" en liste ou en checkbox
+		- Sélectionner la liste de termes précédemment ajouter dans la section Taxonomy
+		- Body ?
+		- field_phone ? c'est déjà possible avec locator
+		- field_email ?
+
+- Ajout de contenu
+	- Add some content
+
+- Afficher le module
+	- Add entity locator to a panel, in the setting of entity locator choose the content type of your entities
