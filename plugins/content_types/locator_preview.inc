@@ -32,9 +32,11 @@ function locator_preview_content_type_render($subtype, $conf, $context = NULL) {
   drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator_block_preview.js');
   drupal_add_css(drupal_get_path('module', 'entity_locator').'/css/entity_locator_block_preview.css');
   
-  $entityLocator = new EntityLocator('places');
+  $values = array_values($conf['node_types']);
+  $bundle = array_shift($values);
+  $entityLocator = new EntityLocator($bundle);
   $params = array(
-    'houses' => EntityLocator::houses(),
+    'houses' =>   $entityLocator->get_categories($conf['node_category']),
     'countries' => $entityLocator->get_entities_countries(),
     'path_to_map' => $conf['locator_preview_map_path'],
   );
@@ -61,6 +63,38 @@ function locator_preview_content_type_edit_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
+  $options = array();  
+  $node_types = node_type_get_types();
+
+  foreach($node_types as $node_type) {
+    $options[$node_type->type] = $node_type->name;
+  } 
+
+  // List of all available node types
+  $form['node_types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Select node types to display on the map'),
+    '#options' => $options,
+    '#default_value' => !empty($conf['node_types']) ? $conf['node_types'] : '',
+  );
+
+  $vocabulary = taxonomy_get_vocabularies();
+  $checklist_vocab_array = array();
+  foreach ($vocabulary as $item) {
+    $key = $item->machine_name;
+    $value = $item->name;
+    $checklist_vocab_array[$key] = $value;
+  }
+
+  $form['node_category'] = array(
+    '#type' => 'select',
+    '#title' => t('Select the Taxonomy'),
+    '#description' => t('Set the id of the Taxonomy who used for categorized nodes.'),
+    '#options' => $checklist_vocab_array ,
+    '#default_value' => !empty($conf['node_category']) ? $conf['node_category'] : '',
+    '#required' => FALSE,
+  );
+
   return $form;
 }
 
@@ -69,5 +103,7 @@ function locator_preview_content_type_edit_form($form, &$form_state) {
  */
 function locator_preview_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['locator_preview_map_path'] = $form_state['values']['locator_preview_map_path'];
+  $form_state['conf']['node_types'] = $form_state['values']['node_types'];
+  $form_state['conf']['node_category'] = $form_state['values']['node_category'];
 }
 
