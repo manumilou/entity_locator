@@ -68,7 +68,7 @@
       }
 
       function applyGetFilters(){
-        if('undefined' != queries.filter_type){
+        if(typeof queries.filter_type != 'undefined'){
           if(queries.filter_type == 'pt' ){
             $("#filters input").attr('checked', false);
             var pt = queries.filter_pt;
