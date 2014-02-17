@@ -99,8 +99,10 @@
         };
 
         map = new google.maps.Map(document.getElementById("entity_locator"), mapOptions);
-        map.mapTypes.set("watercolor", new google.maps.StamenMapType("watercolor"));
-        map.setMapTypeId("watercolor");
+
+        // @todo Active watercolor
+        //map.mapTypes.set("watercolor", new google.maps.StamenMapType("watercolor"));
+        //map.setMapTypeId("watercolor");
 
         var markers = Drupal.settings.entity_locator.markers;
         initMarkers = markers;   

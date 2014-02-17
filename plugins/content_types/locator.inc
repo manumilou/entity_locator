@@ -39,15 +39,18 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   // Include javascript resources
   $api_key = variable_get('entity_locator_gmap_api_key', '');
   drupal_add_js('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&sensor=true');
-  drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
   drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator.js');
+  
+  // @todo Active watercolor
+  //drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
 
   // Get the bundle from the pane configuration
   $values = array_values($conf['node_types']);
   $bundle = array_shift($values);
+  
   $entityLocator = new EntityLocator($bundle);
-
   $entities_by_country = $entityLocator->get_entities_by_country();
+
   foreach($entities_by_country as $entities) {
     foreach($entities as $entity) {
       $wrapper = entity_metadata_wrapper('node', $entity);
@@ -63,6 +66,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
       }
     }
   }
+
   // Add Drupal Behaviour
   $setting = array('entity_locator' => array('markers' => $markers, 'bundle' => $bundle, 'get_params' => drupal_get_query_parameters()));
   drupal_add_js($setting, 'setting');
