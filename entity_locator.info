@@ -1,0 +1,12 @@
+name = Entity Locator
+description = Localize on a map a given set of entity bundles and provides advanced filters to search it.
+core = 7.x
+package = Location
+version = 7.x-1.0
+
+files[] = entity_locator.inc
+
+dependencies[] = ctools
+dependencies[] = location
+dependencies[] = location_node
+dependencies[] = entity
