@@ -29,8 +29,8 @@ function locator_preview_content_type_render($subtype, $conf, $context = NULL) {
     //dpm(t('Please select at least one content type to display on the map'));
     return;
   }
-  drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator_block_preview.js');
-  drupal_add_css(drupal_get_path('module', 'entity_locator').'/css/entity_locator_block_preview.css');
+  drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator_preview.js');
+  drupal_add_css(drupal_get_path('module', 'entity_locator').'/css/entity_locator_preview.css');
   
   $values = array_values($conf['node_types']);
   $bundle = array_shift($values);
