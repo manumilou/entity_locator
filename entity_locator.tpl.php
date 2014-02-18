@@ -12,16 +12,16 @@
 
   <div id="entity_locator_list">
     <h2 class="title"><?php echo t('Liste des oeuvres'); ?></h2>
-    <div id="filters" class="clearfix">
-      <?php echo t('Trier par'); ?> :
+    <div class="filters-prepend"><?php echo t('Trier par'); ?> :</div>
+    <div class="filters clearfix">
       <?php foreach($categories as $category) {
          echo '<input type="checkbox" checked="checked" name="pt-'.$category->tid.'" id="pt-'.$category->tid.'" /><label for="pt-'.$category->tid.'" >'.$category->name.'</label>';
       } ?>
     </div>
     <?php foreach($entities_by_country as $name => $entities): ?>
-      <div class="section clearfix" data-pc="pc-<?php echo strtoupper($name); ?>">
+      <div class="entities-section clearfix" data-pc="pc-<?php echo strtoupper($name); ?>">
         <a href="#" class="title"><h3><?php echo $countries[strtoupper($name)]; ?></h3><div class="arrow up"></div></a>
-        <div class="warper">
+        <div class="wrap">
           <?php foreach($entities as $entity) : ?>
             <?php
               $build = node_view($entity, 'teaser');

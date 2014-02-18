@@ -24,7 +24,7 @@
             } ?>
           </select>
         </div>
-        <input type="submit" id="btn_search" value="<?php echo t('Search'); ?>" />
+        <input type="submit" value="<?php echo t('Search'); ?>" />
       </form>
     </div>
 </div>

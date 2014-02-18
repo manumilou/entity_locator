@@ -38,6 +38,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   $api_key = variable_get('entity_locator_gmap_api_key', '');
   drupal_add_js('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&sensor=true');
   drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator.js');
+    drupal_add_css(drupal_get_path('module', 'entity_locator').'/css/entity_locator.css');
   if($conf['map_type'] != 'original'){
     drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
   }
