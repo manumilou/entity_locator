@@ -1,4 +1,4 @@
-<div id="entity_locator" style="height:450px;">Supposed to be a map.</div>
+<div id="entity_locator" style="height:<?php echo $mapHeight; ?>;">Supposed to be a map.</div>
   <div id="filters-menu" class="clearfix">
     <div class="select-style">
       <select name="countries" id="countries">
@@ -11,8 +11,8 @@
   </div>
 
   <div id="entity_locator_list">
-    <h2 class="title"><?php echo t('Liste des oeuvres'); ?></h2>
-    <div class="filters-prepend"><?php echo t('Trier par'); ?> :</div>
+    <h2 class="title"><?php echo t($prependText); ?></h2>
+    <div class="filters-prepend"><?php echo t('Filter by'); ?> :</div>
     <div class="filters clearfix">
       <?php foreach($categories as $category) {
          echo '<input type="checkbox" checked="checked" name="pt-'.$category->tid.'" id="pt-'.$category->tid.'" /><label for="pt-'.$category->tid.'" >'.$category->name.'</label>';

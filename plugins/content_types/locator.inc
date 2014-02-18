@@ -72,9 +72,11 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
     'entities_by_country' => $entities_by_country,
     'countries' => country_get_list(),
     'categories' => $entityLocator->get_categories($conf['node_category']),
+    'mapHeight' => $conf['map_height'],
+    'prependText' => $conf['prepend_text'],
   );
   $block->content = theme('entity_locator', $params);
-  
+   
   return $block;
 }
 
@@ -96,6 +98,7 @@ function locator_content_type_edit_form($form, &$form_state) {
     '#title' => t('Select node types to display on the map'),
     '#options' => $options,
     '#default_value' => !empty($conf['node_types']) ? $conf['node_types'] : '',
+    '#required' => TRUE,
   );
 
   $vocabulary = taxonomy_get_vocabularies();
@@ -124,9 +127,25 @@ function locator_content_type_edit_form($form, &$form_state) {
   $form['map_type'] = array(
     '#type' => 'select',
     '#title' => t('Select the map type'),
-    '#description' => t('Set the map type of your gmaps'),
+    '#description' => t('Set the map type of your gmaps.'),
     '#options' => $map_types ,
     '#default_value' => !empty($conf['map_type']) ? $conf['map_type'] : 'original',
+    '#required' => FALSE,
+  );
+
+  $form['map_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Map height'),
+    '#description' => t('Set the map height with unit, like 450px or 80%.'),
+    '#default_value' => !empty($conf['map_height']) ? $conf['map_height'] : '450px',  
+    '#required' => TRUE,
+  );
+
+  $form['prepend_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Type of your locations'),
+    '#description' => t('Set text displayed for describe the type of location.'),
+    '#default_value' => !empty($conf['prepend_text']) ? $conf['prepend_text'] : 'List of location',  
     '#required' => FALSE,
   );
 
@@ -140,4 +159,6 @@ function locator_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['node_types'] = $form_state['values']['node_types'];
   $form_state['conf']['node_category'] = $form_state['values']['node_category'];
   $form_state['conf']['map_type'] = $form_state['values']['map_type'];
+  $form_state['conf']['map_height'] = $form_state['values']['map_height'];
+  $form_state['conf']['prepend_text'] = $form_state['values']['prepend_text'];
 }
