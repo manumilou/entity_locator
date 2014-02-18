@@ -32,8 +32,6 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   
   // Initialize variables
   $block = new StdClass();
-  // @todo Check for dependencies
-  $countries = country_get_list();
   $markers = array();
 
   // Include javascript resources
@@ -45,9 +43,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   }
 
   // Get the bundle from the pane configuration
-  $values = array_values($conf['node_types']);
-  $bundle = array_shift($values);
-  
+  $bundle = array_shift(array_values($conf['node_types']));
   $entityLocator = new EntityLocator($bundle);
   $entities_by_country = $entityLocator->get_entities_by_country();
 
@@ -71,48 +67,13 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   $setting = array('entity_locator' => array('markers' => $markers, 'bundle' => $bundle, 'get_params' => drupal_get_query_parameters(), 'map_type' => $conf['map_type']));
   drupal_add_js($setting, 'setting');
 
-  //Display the map
-  $map = '<div id="entity_locator" style="width:960px; height:450px;">Supposed to be a map.</div>';
+  $params = array(
+    'entities_by_country' => $entities_by_country,
+    'countries' => country_get_list(),
+    'categories' => $entityLocator->get_categories($conf['node_category']),
+  );
+  $block->content = theme('entity_locator', $params);
   
-  //Display country filter
-  $map .= '<div id="filters-menu" class="clearfix">';
-  
-  //Countries filter
-  $map .= '<div class="select-style"><select name="countries" id="countries"><option value="">'.t('Pays').' :</option>';
-  foreach(array_keys($entities_by_country) as $key) {
-    $map .= '<option value="pc-'.strtoupper($key).'">'.$countries[strtoupper($key)].'</option>';
-  }
-  $map .= '</select></div></div>';
-
-  // Format the list
-  $list = '<div id="entity_locator_list"><h2 class="title">' . t('Liste des oeuvres') . '</h2>';
-  
-  //Add filters
-  $list .= '<div id="filters" class="clearfix">' . t('Trier par') . ' : ';
-  
-
-  $categories = $entityLocator->get_categories($conf['node_category']);
-  foreach($categories as $category) {
-     $list .= '<input type="checkbox" checked="checked" name="pt-'.$category->tid.'" id="pt-'.$category->tid.'" class="css-checkbox" /><label for="pt-'.$category->tid.'" class="css-label">'.$category->name.'</label>';
-  }
-  $list .= '</div>';
-  
-  //Display each of places by section
-  foreach($entities_by_country as $name => $entities) {
-    $list .= '<div class="section clearfix" data-pc="pc-'.strtoupper($name).'">';
-      $list .= '<a href="#" class="title"><h3>'.$countries[strtoupper($name)].'</h3><div class="arrow up"></div></a>';
-      $list .= '<div class="warper">';
-      foreach($entities as $entity) {
-        $build = node_view($entity, 'teaser');
-        $entityWrapper = entity_metadata_wrapper('node', $entity);
-        $list .= '<article data-pt="pt-'.$entityWrapper->field_type->getIdentifier().'" data-pc="pc-'. strtoupper($build['locations']['#locations'][0]['country']) .'" >'. drupal_render($build) .'</article>';
-      }
-      $list .= '</div>';
-    $list .= '</div>';
-  }
-  $list .= '</div>';
-
-  $block->content = $map . $list;
   return $block;
 }
 
