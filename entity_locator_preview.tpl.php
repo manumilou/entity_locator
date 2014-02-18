@@ -27,4 +27,5 @@
         <input type="submit" value="<?php echo t('Search'); ?>" />
       </form>
     </div>
+  </div>
 </div>
