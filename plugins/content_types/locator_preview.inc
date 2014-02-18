@@ -30,7 +30,6 @@ function locator_preview_content_type_render($subtype, $conf, $context = NULL) {
     return;
   }
   drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator_preview.js');
-  drupal_add_css(drupal_get_path('module', 'entity_locator').'/css/entity_locator_preview.css');
   
   $values = array_values($conf['node_types']);
   $bundle = array_shift($values);

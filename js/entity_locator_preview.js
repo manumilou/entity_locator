@@ -1,26 +1,18 @@
 (function ($) {
   Drupal.behaviors.testsSelectionCfml = {
     attach: function(context, settings) {
-      
-      $('#filter_pc').parent().hide();
 
-      $('#entity-locator-block-preview-places .place').mouseenter(function(){
-        $(this).children('.caption').fadeIn();
-      }).mouseleave(function(){
-        $(this).children('.caption').fadeOut();
-      });
+      var $filter_pc = $('#entity-locator-preview #filter_pc'); 
+      var $filter_type = $('#entity-locator-preview #filter_type');
+      var $filter_pt = $('#entity-locator-preview #filter_pt');
 
-      $('#entity-locator-block-preview-filters #filter_type').change(function(){
-        if($(this).val() == 'pc'){
-          $('#filter_pc').parent().show();
-          $('#filter_pt').parent().hide();
-        }else{
-          $('#filter_pc').parent().hide();
-          $('#filter_pt').parent().show();
-        }
+      $filter_pc.parent().hide();
+      $filter_type .change(function(){
+        var val = $(this).val();
+        $filter_pc.parent().toggle(val == 'pc');
+        $filter_pt.parent().toggle(val != 'pc');
       });
       
     }
   };
 })(jQuery);
-
