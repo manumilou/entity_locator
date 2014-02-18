@@ -87,9 +87,10 @@ function locator_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
   $options = array();  
   $node_types = node_type_get_types();
-
+    
   foreach($node_types as $node_type) {
     $options[$node_type->type] = $node_type->name;
+    //dpm(getTaxonomyFromNodeType($node_type->type));
   } 
 
   // List of all available node types
@@ -161,4 +162,21 @@ function locator_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['map_type'] = $form_state['values']['map_type'];
   $form_state['conf']['map_height'] = $form_state['values']['map_height'];
   $form_state['conf']['prepend_text'] = $form_state['values']['prepend_text'];
+}
+
+/**
+ * Helper to get Taxonomy from a node type
+ */
+function getTaxonomyFromNodeType($node_type) {
+  $fields_info = field_info_instances('node', $node_type);
+  $options = array();
+  foreach ($fields_info as $field_name => $field) {
+    $field_info = field_info_field($field_name);
+    if($field_info['type'] == "taxonomy_term_reference"){
+      $vocab_machine_name = $field_info['settings']['allowed_values'][0]['vocabulary'];
+      $taxonomy = taxonomy_vocabulary_machine_name_load($vocab_machine_name);
+      $options[$taxonomy->machine_name] = $field['label'];
+    }
+  }
+  return $options;
 }
