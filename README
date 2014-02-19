@@ -11,8 +11,10 @@ Dependencies
 
 The CTools plugin allows the user to select which entities to display on the map. As for now, the entity must be a location-enabled content type
 
+* Chaos tools
+* Entity API
+* Location
+* Node Locations
 
-* CTools
-* Entity
 
 Drupal sandbox project: https://drupal.org/sandbox/manumilou/2198535

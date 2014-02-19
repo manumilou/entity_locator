@@ -69,5 +69,8 @@ function entity_locator_theme() {
   $templates['entity_locator_preview'] = array(
       'template' => 'entity_locator_preview',
   );
+  $templates['entity_locator'] = array(
+      'template' => 'entity_locator',
+  );
   return $templates;
 }

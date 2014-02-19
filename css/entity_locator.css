@@ -1,0 +1,25 @@
+#entity_locator_list .filters input, #entity_locator_list .filters label{
+	float:left;
+}
+
+#entity_locator_list .filters label{
+	margin:0 15px 0 5px;
+}
+#entity_locator_list .entities-section a.title{			
+	display:block;
+	position:relative;
+}
+#entity_locator_list a.title h3{
+	border-bottom:1px solid black;
+}
+#entity_locator_list .arrow{
+	position:absolute;
+	right:8px;
+	top:5px;
+	width:18px;
+	height:9px;
+	background: url(../img/arrow-down.png) no-repeat;
+}
+#entity_locator_list .arrow.up{
+	background: url(../img/arrow-up.png) no-repeat;
+}

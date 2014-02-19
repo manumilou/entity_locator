@@ -95,27 +95,25 @@ class EntityLocator{
 
 
   /**
-   * Get a list of houses types.
-   * Houses are associated to a SCSL place through a CCK field: field_type.
-   *
+   * Get a list of entity taxonmy values.
    * Uses static caching.
    *
    * @return
-   *  An array of taxonomy terms entities representing houses, keyed by their identifier.
+   *  An array of taxonomy terms entities.
    */
-  public static function houses() {
-    $houses = &drupal_static(__FUNCTION__);
-    if(!isset($houses)) {
-      if($cache = cache_get('entity_locator_houses_list')) {
-        $houses = $cache->data;
-      }
-      else {
-        // Generate entire tree
-        $vocabulary = taxonomy_vocabulary_machine_name_load('houses');
-        $houses = taxonomy_get_tree($vocabulary->vid, 0, NULL, FALSE);
-        cache_set('entity_locator_houses_list', $houses, 'cache');
+  public function get_categories($field_name) {
+    $categories = &drupal_static(__FUNCTION__);
+    if(!isset($categories)) {
+      if($cache = cache_get('entity_locator_' .$field_name. '_list')) {
+        $categories = $cache->data;
+      } else {
+        $field_info = field_info_field($field_name);
+        $category_name = $field_info['settings']['allowed_values'][0]['vocabulary'];
+        $vocabulary = taxonomy_vocabulary_machine_name_load($category_name);
+        $categories = taxonomy_get_tree($vocabulary->vid, 0, NULL, FALSE);
+        cache_set('entity_locator_' .$category_name. '_list', $categories, 'cache');
       }
     }
-    return $houses;
+    return $categories;
   }
 }
