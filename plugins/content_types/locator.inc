@@ -50,14 +50,20 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
 
   foreach($entities_by_country as $entities) {
     foreach($entities as $entity) {
+      $place_types = array();
       $wrapper = entity_metadata_wrapper('node', $entity);
+      $iterator = $wrapper->$conf['node_category']->getIterator();
+      foreach ($iterator as $EntityDrupalWrapper) {
+        $place_types[] = 'pt-'.$EntityDrupalWrapper->getIdentifier();
+      }
+
       if($entity->location && $entity->location['lid'] != NULL) {
         // Set the markers
         $markers[] = array(
           'title' => $entity->title,
           'lat' => $entity->location['latitude'],
           'lng' => $entity->location['longitude'],
-          'places_type' => 'pt-'.$wrapper->field_type->getIdentifier(),
+          'types' => $place_types,
           'places_country' => 'pc-'.strtoupper($entity->location['country']),
         );
       }
@@ -71,6 +77,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   $params = array(
     'entities_by_country' => $entities_by_country,
     'countries' => country_get_list(),
+    'node_category' => $conf['node_category'],
     'categories' => $entityLocator->get_categories($conf['node_category']),
     'mapHeight' => $conf['map_height'],
     'prependText' => $conf['prepend_text'],
@@ -169,9 +176,7 @@ function getTaxonomyFromNodeType($node_type) {
   foreach ($fields_info as $field_name => $field) {
     $field_info = field_info_field($field_name);
     if($field_info['type'] == "taxonomy_term_reference"){
-      $vocab_machine_name = $field_info['settings']['allowed_values'][0]['vocabulary'];
-      $taxonomy = taxonomy_vocabulary_machine_name_load($vocab_machine_name);
-      $options[$taxonomy->machine_name] = $field['label'];
+      $options[$field_name] = $field['label'];
     }
   }
   return $options;

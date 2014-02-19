@@ -28,7 +28,7 @@
           return false;
       });
       
-      $("#filters input:checkbox, #filters-menu #countries").change(function(){
+      $(".filters input:checkbox, #filters-menu #countries").change(function(){
         resfreshMarkersAndPlaces();
         refreshEmptySections();
       });
@@ -38,18 +38,30 @@
         var pcSelected = $("#filters-menu #countries").val();
 
         //refresh Gmaps markers
-        for (var i = 0; i < initMarkers.length; i++) {
-          var pt = initMarkers[i]['places_type'], ptSelected = $("#filters input#"+pt).is(':checked');
+        for (var i = 0; i < initMarkers.length; i++) {         
+          var pts = initMarkers[i]['types'], ptSelected = ptIsSelected(pts);
+
           showOrHide = (pcSelected == '' || pcSelected == initMarkers[i]['places_country']) && ptSelected;
           markers[i].setVisible(showOrHide);
+          i++;
         };
 
         //Refresh Places
         $('#entity_locator_list article').each(function(i){
-          var $this = $(this), pt = $this.data('pt'), ptSelected = $("#filters input#"+pt).is(':checked');
+          var $this = $(this), pt = $this.data('pt'), pts = pt.split(','), ptSelected = ptIsSelected(pts);
+
           showOrHide = (pcSelected == '' || pcSelected == $this.data('pc')) && ptSelected;
           $this.toggle(showOrHide).toggleClass('active',showOrHide);
         });
+      }
+      
+      function ptIsSelected(pts){
+        for (var i = 0; i < pts.length; i++) {
+          if($(".filters input#"+pts[i]).is(':checked')){
+            return true;
+          }
+        }
+        return false;
       }
 
       function refreshEmptySections(){
@@ -59,7 +71,7 @@
         });
       }
 
-      function openPopSections(){
+      function openNotEmptySections(){
         $(".entities-section").each(function(i){
           var $section = $(this), isEmpty = $section.find('article.active').length == 0;
           $section.find(".arrow").removeClass('up');
@@ -70,15 +82,15 @@
       function applyGetFilters(){
         if(typeof queries.filter_type != 'undefined'){
           if(queries.filter_type == 'pt' ){
-            $("#filters input").attr('checked', false);
+            $(".filters input").attr('checked', false);
             var pt = queries.filter_pt;
-            $("#filters input#"+pt).attr('checked', true);
+            $(".filters input#"+pt).attr('checked', true);
           } else {
             var pc = queries.filter_pc;
             $('#filters-menu #countries').val(pc);
           }
-          $("#filters-menu #countries, #filters input:checkbox").trigger('change');
-          openPopSections();
+          $("#filters-menu #countries, .filters input:checkbox").trigger('change');
+          openNotEmptySections();
         }
       }
 
@@ -107,7 +119,7 @@
 
 
         var markers = Drupal.settings.entity_locator.markers;
-        initMarkers = markers;   
+        initMarkers = markers;
 
         // Set markers
         $.each(markers, function(index, value) {

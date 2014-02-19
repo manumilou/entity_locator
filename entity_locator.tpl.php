@@ -9,7 +9,7 @@
       </select>
     </div>
   </div>
-
+  
   <div id="entity_locator_list">
     <h2 class="title"><?php echo t($prependText); ?></h2>
     <div class="filters-prepend"><?php echo t('Filter by'); ?> :</div>
@@ -25,10 +25,17 @@
           <?php foreach($entities as $entity) : ?>
             <?php
               $build = node_view($entity, 'teaser');
+              $place_types = "";
               $entityWrapper = entity_metadata_wrapper('node', $entity);
-              $pt = $entityWrapper->field_type->getIdentifier();
+              $iterator = $entityWrapper->$node_category->getIterator();
+              foreach ($iterator as $EntityDrupalWrapper) {
+                $place_types .= 'pt-'.$EntityDrupalWrapper->getIdentifier().',';
+              }
+              $place_types = substr_replace($place_types, '', -1);
+
+
               $pc = strtoupper($build['locations']['#locations'][0]['country']);
-              echo '<article data-pt="pt-'.$pt.'" data-pc="pc-'.$pc.'" >'. drupal_render($build) .'</article>';
+              echo '<article data-pt="'.$place_types.'" data-pc="pc-'.$pc.'" >'. drupal_render($build) .'</article>';
             ?>
           <?php endforeach; ?>
         </div>  

@@ -95,21 +95,21 @@ class EntityLocator{
 
 
   /**
-   * Get a list of houses types.
-   * Houses are associated to a SCSL place through a CCK field: field_type.
-   *
+   * Get a list of entity taxonmy values.
    * Uses static caching.
    *
    * @return
-   *  An array of taxonomy terms entities representing houses, keyed by their identifier.
+   *  An array of taxonomy terms entities.
    */
-  public function get_categories($category_name) {
+  public function get_categories($field_name) {
     $categories = &drupal_static(__FUNCTION__);
     if(!isset($categories)) {
-      if($cache = cache_get('entity_locator_' .$category_name. '_list')) {
+      if($cache = cache_get('entity_locator_' .$field_name. '_list')) {
         $categories = $cache->data;
       }
       else {
+        $field_info = field_info_field($field_name);
+        $category_name = $field_info['settings']['allowed_values'][0]['vocabulary'];
         $vocabulary = taxonomy_vocabulary_machine_name_load($category_name);
         $categories = taxonomy_get_tree($vocabulary->vid, 0, NULL, FALSE);
         cache_set('entity_locator_' .$category_name. '_list', $categories, 'cache');
