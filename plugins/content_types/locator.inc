@@ -87,10 +87,14 @@ function locator_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
   $options = array();  
   $node_types = node_type_get_types();
-    
+  $vocab_array = array();
+
   foreach($node_types as $node_type) {
     $options[$node_type->type] = $node_type->name;
-    //dpm(getTaxonomyFromNodeType($node_type->type));
+    $taxonomy = getTaxonomyFromNodeType($node_type);
+    if(!empty($taxonomy)){
+      $vocab_array[$node_type->name] = $taxonomy;  
+    }
   } 
 
   // List of all available node types
@@ -102,19 +106,11 @@ function locator_content_type_edit_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $vocabulary = taxonomy_get_vocabularies();
-  $checklist_vocab_array = array();
-  foreach ($vocabulary as $item) {
-    $key = $item->machine_name;
-    $value = $item->name;
-    $checklist_vocab_array[$key] = $value;
-  }
-
   $form['node_category'] = array(
     '#type' => 'select',
     '#title' => t('Select the Taxonomy'),
     '#description' => t('Set the id of the Taxonomy who used for categorized nodes.'),
-    '#options' => $checklist_vocab_array ,
+    '#options' => $vocab_array ,
     '#default_value' => !empty($conf['node_category']) ? $conf['node_category'] : '',
     '#required' => FALSE,
   );
@@ -168,7 +164,7 @@ function locator_content_type_edit_form_submit($form, &$form_state) {
  * Helper to get Taxonomy from a node type
  */
 function getTaxonomyFromNodeType($node_type) {
-  $fields_info = field_info_instances('node', $node_type);
+  $fields_info = field_info_instances('node', $node_type->type);
   $options = array();
   foreach ($fields_info as $field_name => $field) {
     $field_info = field_info_field($field_name);
