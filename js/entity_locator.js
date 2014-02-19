@@ -39,17 +39,16 @@
 
         //refresh Gmaps markers
         for (var i = 0; i < initMarkers.length; i++) {         
-          var pts = initMarkers[i]['types'], ptSelected = ptIsSelected(pts);
-
+          var pts = initMarkers[i]['types'], ptSelected = true;
+          if(pts.length > 0) ptSelected = ptIsSelected(pts);
           showOrHide = (pcSelected == '' || pcSelected == initMarkers[i]['places_country']) && ptSelected;
           markers[i].setVisible(showOrHide);
-          i++;
         };
 
         //Refresh Places
         $('#entity_locator_list article').each(function(i){
-          var $this = $(this), pt = $this.data('pt'), pts = pt.split(','), ptSelected = ptIsSelected(pts);
-
+          var $this = $(this), pt = $this.data('pt'), ptSelected = true;
+          if(pt != '') var pts = pt.split(','), ptSelected = ptIsSelected(pts);
           showOrHide = (pcSelected == '' || pcSelected == $this.data('pc')) && ptSelected;
           $this.toggle(showOrHide).toggleClass('active',showOrHide);
         });
@@ -57,9 +56,7 @@
       
       function ptIsSelected(pts){
         for (var i = 0; i < pts.length; i++) {
-          if($(".filters input#"+pts[i]).is(':checked')){
-            return true;
-          }
+          if($(".filters input#"+pts[i]).is(':checked')) return true;
         }
         return false;
       }

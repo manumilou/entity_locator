@@ -51,10 +51,12 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   foreach($entities_by_country as $entities) {
     foreach($entities as $entity) {
       $place_types = array();
-      $wrapper = entity_metadata_wrapper('node', $entity);
-      $iterator = $wrapper->$conf['node_category']->getIterator();
-      foreach ($iterator as $EntityDrupalWrapper) {
-        $place_types[] = 'pt-'.$EntityDrupalWrapper->getIdentifier();
+      if( ! empty($conf['node_category']) ){
+        $wrapper = entity_metadata_wrapper('node', $entity);
+        $iterator = $wrapper->$conf['node_category']->getIterator();
+        foreach ($iterator as $EntityDrupalWrapper) {
+          $place_types[] = 'pt-'.$EntityDrupalWrapper->getIdentifier();
+        }
       }
 
       if($entity->location && $entity->location['lid'] != NULL) {
@@ -94,7 +96,7 @@ function locator_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
   $options = array();  
   $node_types = node_type_get_types();
-  $vocab_array = array();
+  $vocab_array = array('' => 'None');
 
   foreach($node_types as $node_type) {
     $options[$node_type->type] = $node_type->name;

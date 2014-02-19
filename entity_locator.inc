@@ -106,8 +106,7 @@ class EntityLocator{
     if(!isset($categories)) {
       if($cache = cache_get('entity_locator_' .$field_name. '_list')) {
         $categories = $cache->data;
-      }
-      else {
+      } else {
         $field_info = field_info_field($field_name);
         $category_name = $field_info['settings']['allowed_values'][0]['vocabulary'];
         $vocabulary = taxonomy_vocabulary_machine_name_load($category_name);
