@@ -27,19 +27,10 @@
           <?php foreach($entities as $entity) : ?>
             <?php
               $build = node_view($entity, 'teaser');
-              $place_types = "";
-              
-              if( ! empty($node_category) ){
-                $entityWrapper = entity_metadata_wrapper('node', $entity);
-                $iterator = $entityWrapper->$node_category->getIterator();
-                foreach ($iterator as $EntityDrupalWrapper) {
-                  $place_types .= 'pt-'.$EntityDrupalWrapper->getIdentifier().',';
-                }
-                $place_types = substr_replace($place_types, '', -1);
-              }
-
+              $pt = "";              
+              if( ! empty($node_category) ) $pt = implode (",", $entity->place_types);
               $pc = strtoupper($build['locations']['#locations'][0]['country']);
-              echo '<article data-pt="'.$place_types.'" data-pc="pc-'.$pc.'" >'. drupal_render($build) .'</article>';
+              echo '<article data-pt="'.$pt.'" data-pc="pc-'.$pc.'" >'. drupal_render($build) .'</article>';
             ?>
           <?php endforeach; ?>
         </div>  

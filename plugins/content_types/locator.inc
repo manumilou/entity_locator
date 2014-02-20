@@ -49,7 +49,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
   $entities_by_country = $entityLocator->get_entities_by_country();
 
   foreach($entities_by_country as $entities) {
-    foreach($entities as $entity) {
+    foreach($entities as &$entity) {
       $place_types = array();
       if( ! empty($conf['node_category']) ){
         $wrapper = entity_metadata_wrapper('node', $entity);
@@ -58,6 +58,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
           $place_types[] = 'pt-'.$EntityDrupalWrapper->getIdentifier();
         }
       }
+      $entity->place_types = $place_types;
 
       if($entity->location && $entity->location['lid'] != NULL) {
         // Set the markers
