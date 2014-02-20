@@ -1,7 +1,7 @@
-Entity Locator is a Drupal (7.x) module that provides a CTools Content Type plugin to display entities on a Google Map.
+Entity Locator is a `Drupal <http://drupal.org>`_ (7.x) module that provides a CTools Content Type plugin to display entities on a Google Map.
 It does not depend on the gmap module.
 
-
+============
 Installation
 ============
 
@@ -20,7 +20,7 @@ The CTools plugin allows the user to select which entities to display on the map
 
 Drupal sandbox project: https://drupal.org/sandbox/manumilou/2198535
 
-Configuration
+Pane configuration
 ------------
 
 For this to work, you need at least:
@@ -35,12 +35,11 @@ The module provides CTools content type plugin available through the Panels modu
  * Select the content type to display
  * Select a taxonomy attached to it, if available
  * Select the map type
- 
+
+
 Enable filters
-~~~~~~~~~~~~~~
+--------------
 
 To enable filters along the map, you need to add a *Term reference* field to the content type, and select it from the pane settings form.
 This will add checkboxes under the map to filter the list elements.
-
-
 
