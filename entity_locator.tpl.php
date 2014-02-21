@@ -1,10 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Template for entity locator template
+ */
+
+?>
 <div id="entity_locator" style="height:<?php echo $map_height; ?>;">Supposed to be a map.</div>
   <div id="filters-menu" class="clearfix">
     <div class="select-style">
       <select name="countries" id="countries">
         <option value=""><?php echo t('Pays'); ?> :</option>
           <?php foreach (array_keys($entities_by_country) as $key) : ?>
-            <option value="pc-'<?php echo strtoupper($key); ?>'"><?php echo $countries[strtoupper($key)]; ?></option>
+            <option value="pc-<?php echo strtoupper($key); ?>"><?php echo $countries[strtoupper($key)]; ?></option>
           <?php endf; ?>
       </select>
     </div>
@@ -16,7 +24,8 @@
       <div class="filters-prepend"><?php echo t('Filter by'); ?> :</div>
       <div class="filters clearfix">
         <?php foreach($categories as $category) {
-           echo '<input type="checkbox" checked="checked" name="pt-' . $category->tid . '" id="pt-' . $category->tid . '" /><label for="pt-' . $category->tid . '" >' . $category->name . '</label>';
+           echo '<input type="checkbox" checked="checked" name="pt-' . $category->tid . '" id="pt-' . $category->tid . '" />';
+           echo '<label for="pt-' . $category->tid . '" >' . $category->name . '</label>';
         } ?>
       </div>
     <?php endif; ?>

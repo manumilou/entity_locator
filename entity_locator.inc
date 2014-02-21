@@ -1,15 +1,24 @@
 <?php
 
+/**
+ * @file
+ * Provide a class for accessing to entities and caching it
+ */
+
 class EntityLocator {
 
   protected $bundle;
 
+  /**
+   * Constructer.
+   */
   public function __construct($bundle) {
     $this->bundle = $bundle;
   }
 
   /**
    * Get entities to display on the map.
+   *
    * It uses the bundle(s) specified in the Ctools panel configuration.
    */
   public function get_entities() {
@@ -95,12 +104,11 @@ class EntityLocator {
     return $countries;
   }
 
-
   /**
-   * Get a list of entity taxonmy values.
+   * Get a list of taxonmy values.
    * Uses static caching.
    *
-   *  @return array
+   *  @return  array
    *  An array of taxonomy terms entities.
    */
   public function get_categories($field_name) {

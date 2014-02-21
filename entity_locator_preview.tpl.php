@@ -1,3 +1,11 @@
+<?php
+
+/**
+ * @file
+ * Template file for entity locator preview
+ */
+
+?>
 <?php $countries_list = country_get_list(); ?>
 <div id="entity-locator-preview">
   <div class="inside">
@@ -12,16 +20,16 @@
         </div>
         <div class="select-wrapper">
           <select id="filter_pt" name="filter_pt">
-            <?php foreach ($houses as $key => $house) {
-            	echo '<option value="pt-'.$house->tid.'">'.$house->name.'</option>';
-            } ?>
+            <?php foreach ($houses as $key => $house): ?>
+            	<option value="pt-<?php echo $house->tid; ?>"><?php echo $house->name; ?></option>
+            <?php endforeach; ?>
           </select>
         </div>
         <div class="select-wrapper">
           <select id="filter_pc" name="filter_pc">
-            <?php foreach ($countries as $key => $country) {
-            	echo '<option value="pc-'.strtoupper($country).'">'.$countries_list[strtoupper($country)].'</option>';
-            } ?>
+            <?php foreach ($countries as $key => $country): ?>
+              <option value="pc-<?php echo strtoupper($country); ?>"><?php echo $countries_list[strtoupper($country)]; ?></option>
+            <?php endforeach; ?>
           </select>
         </div>
         <input type="submit" value="<?php echo t('Search'); ?>" />

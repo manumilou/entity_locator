@@ -1,12 +1,18 @@
 <?php
 
 /**
+ * @file
+ * Entity locator module, Implements some useful hooks
+ */
+
+/**
  * Implements hook_ctools_plugin_directory().
+ *
  * This lets ctools know to scan my module for a content_type plugin file
  * Detailed docks in ctools/ctools.api.php
  */
 function entity_locator_ctools_plugin_directory($owner, $plugin) {
-  // we'll be nice and limit scandir() calls
+  // we'll be nice and limit scandir() calls.
   if ($owner == 'ctools' && !empty($plugin)) {
     return "plugins/$plugin";
   }
@@ -32,33 +38,6 @@ function entity_locator_menu() {
   );
 
   return $items;
-}
-
-function entity_locator_ajax($bundle) {
-  $markers = array();
-
-  // @todo Use config
-  $entity_locator = new EntityLocator($bundle);
-  $entities = $entity_locator->get_entities();
-
-  foreach ($entities as $nid => $entity) {
-    if ($entity->location && $entity->location['lid'] != NULL) {
-      $markers[] = array(
-        'title' => $entity->title,
-        'lat' => $entity->location['latitude'],
-        'lng' => $entity->location['longitude'],
-      );
-    }
-  }
-
-  // @todo Remove this. Just a test.
-  $markers[] = array(
-    'lat' => '67.56109365945179',
-    'lng' => '-75.8935546875',
-    'title' => 'Hello World',
-  );
-
-  return drupal_json_output($markers);
 }
 
 /**

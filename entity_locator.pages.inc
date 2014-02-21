@@ -1,5 +1,12 @@
 <?php
+/**
+ * @file
+ * Entity locator config filr for the module
+ */
 
+/**
+ * Implements hook_config().
+ */
 function entity_locator_config($form, $form_state) {
   $form['initialization'] = array(
     '#type' => 'fieldset',

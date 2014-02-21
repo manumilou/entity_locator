@@ -1,15 +1,20 @@
 <?php
 
 /**
+ * @file
+ * Install, update, and uninstall functions for the Foo Bar module.
+ */
+
+/**
  * This plugin array is more or less self documenting
  */
 $plugin = array(
-  // the title in the admin
+  // The title in the admin.
   'title' => t('Entity Locator'),
   'description' => t('Display Drupal entities on a map'),
-  // no one knows if "single" defaults to FALSE...
+  // No one knows if "single" defaults to FALSE.
   'single' => TRUE,
-  // oh joy, I get my own section of panel panes
+  // Oh joy, I get my own section of panel panes.
   'category' => array(t('Entity Locator'), -9),
   'edit form' => 'locator_content_type_edit_form',
   'render callback' => 'locator_content_type_render',
@@ -17,24 +22,24 @@ $plugin = array(
 );
 
 /**
- * Run-time rendering of the body of the block (content type)
+ * Run-time rendering of the body of the block (content type).
+ *
  * See ctools_plugin_examples for more advanced info
  */
 function locator_content_type_render($subtype, $conf, $context = NULL) {
-  // Make sure that context variable is not empty
+  // Make sure that context variable is not empty.
   if (empty($context)) {
   }
 
   if (empty($conf['node_types'])) {
-    // dpm(t('Please select at least one content type to display on the map'));
     return;
   }
 
-  // Initialize variables
+  // Initialize variables.
   $block = new StdClass();
   $markers = array();
 
-  // Include javascript resources
+  // Include javascript resources.
   $api_key = variable_get('entity_locator_gmap_api_key', '');
   drupal_add_js('https://maps.googleapis.com/maps/api/js?key=' . $api_key . '&sensor=true');
   drupal_add_js(drupal_get_path('module', 'entity_locator') . '/js/entity_locator.js');
@@ -43,7 +48,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
     drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
   }
 
-  // Get the bundle from the pane configuration
+  // Get the bundle from the pane configuration.
   $bundle = array_shift(array_values($conf['node_types']));
   $entity_locator = new EntityLocator($bundle);
   $entities_by_country = $entity_locator->get_entities_by_country();
@@ -61,7 +66,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
       $entity->place_types = $place_types;
 
       if ($entity->location && $entity->location['lid'] != NULL) {
-        // Set the markers
+        // Set the markers.
         $markers[] = array(
           'title' => $entity->title,
           'lat' => $entity->location['latitude'],
@@ -73,8 +78,13 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
     }
   }
 
-  // Add Drupal Behaviour
-  $setting = array('entity_locator' => array('markers' => $markers, 'bundle' => $bundle, 'get_params' => drupal_get_query_parameters(), 'map_type' => $conf['map_type']));
+  // Add Drupal Behaviour.
+  $setting = array(
+    'entity_locator' => array(
+      'markers' => $markers,
+      'bundle' => $bundle,
+      'get_params' => drupal_get_query_parameters(),
+      'map_type' => $conf['map_type']));
   drupal_add_js($setting, 'setting');
 
   $params = array(
@@ -90,7 +100,7 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
 }
 
 /**
- * 'Edit form' callback for the content type.
+ * Edit form callback for the content type.
  */
 function locator_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
@@ -100,13 +110,13 @@ function locator_content_type_edit_form($form, &$form_state) {
 
   foreach ($node_types as $node_type) {
     $options[$node_type->type] = $node_type->name;
-    $taxonomy = getTaxonomyFromNodeType($node_type);
+    $taxonomy = get_taxonomy_from_node_type($node_type);
     if (!empty($taxonomy)) {
       $vocab_array[$node_type->name] = $taxonomy;
     }
   }
 
-  // List of all available node types
+  // List of all available node types.
   $form['node_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Select node types to display on the map'),
@@ -159,7 +169,7 @@ function locator_content_type_edit_form($form, &$form_state) {
 }
 
 /**
- * Submit function, note anything in the formstate[conf] automatically gets saved
+ * Submit function, anything in the formstate[conf] gets saved.
  */
 function locator_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['node_types'] = $form_state['values']['node_types'];
@@ -170,9 +180,9 @@ function locator_content_type_edit_form_submit($form, &$form_state) {
 }
 
 /**
- * Helper to get Taxonomy from a node type
+ * Helper to get Taxonomy from a node type.
  */
-function getTaxonomyFromNodeType($node_type) {
+function get_taxonomy_from_node_type($node_type) {
   $fields_info = field_info_instances('node', $node_type->type);
   $options = array();
   foreach ($fields_info as $field_name => $field) {
