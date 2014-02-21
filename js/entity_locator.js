@@ -166,25 +166,6 @@
         setAllMap(null);
       }
 
-      function setmarkers(map) {
-        // Hide the markers from the map
-        clearMarkers();
-
-        // Get bundle from configuration
-        var bundle = Drupal.settings.entity_locator.bundle;
-
-        // Fetch entities
-        $.ajax(Drupal.settings.basePath + 'entity_locator/ajax/entities/' + bundle)
-          .done(function(data) {
-
-            //console.log(data);
-
-            // Iterate over the results
-            $.each(data, function(index, value) {
-              addMarker(value);              
-            })
-          })
-      }
       google.maps.event.addDomListener(window, 'load', initialize(initializeCallBack));
     }
 
