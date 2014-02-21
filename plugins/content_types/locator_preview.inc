@@ -21,22 +21,22 @@ $plugin = array(
  * See ctools_plugin_examples for more advanced info
  */
 function locator_preview_content_type_render($subtype, $conf, $context = NULL) {
-   // Make sure that context variable is not empty
-  if(empty($context)) {
+  // Make sure that context variable is not empty
+  if (empty($context)) {
   }
 
-  if(empty($conf['locator_preview_map_path'])) {
-    //dpm(t('Please select at least one content type to display on the map'));
+  if (empty($conf['locator_preview_map_path'])) {
+    // dpm(t('Please select at least one content type to display on the map'));
     return;
   }
-  drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator_preview.js');
-  
+  drupal_add_js(drupal_get_path('module', 'entity_locator') . '/js/entity_locator_preview.js');
+
   $values = array_values($conf['node_types']);
   $bundle = array_shift($values);
-  $entityLocator = new EntityLocator($bundle);
+  $entity_locator = new EntityLocator($bundle);
   $params = array(
-    'houses' =>   $entityLocator->get_categories($conf['node_category']),
-    'countries' => $entityLocator->get_entities_countries(),
+    'houses' => $entity_locator->get_categories($conf['node_category']),
+    'countries' => $entity_locator->get_entities_countries(),
     'path_to_map' => $conf['locator_preview_map_path'],
   );
 
@@ -58,16 +58,16 @@ function locator_preview_content_type_edit_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Path to node map'),
     '#description' => t('Path to the node where map is displayed.'),
-    '#default_value' => !empty($conf['locator_preview_map_path']) ? $conf['locator_preview_map_path'] : '',  
+    '#default_value' => !empty($conf['locator_preview_map_path']) ? $conf['locator_preview_map_path'] : '',
     '#required' => TRUE,
   );
 
-  $options = array();  
+  $options = array();
   $node_types = node_type_get_types();
 
-  foreach($node_types as $node_type) {
+  foreach ($node_types as $node_type) {
     $options[$node_type->type] = $node_type->name;
-  } 
+  }
 
   // List of all available node types
   $form['node_types'] = array(
@@ -105,4 +105,3 @@ function locator_preview_content_type_edit_form_submit($form, &$form_state) {
   $form_state['conf']['node_types'] = $form_state['values']['node_types'];
   $form_state['conf']['node_category'] = $form_state['values']['node_category'];
 }
-

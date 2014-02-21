@@ -22,52 +22,52 @@ $plugin = array(
  */
 function locator_content_type_render($subtype, $conf, $context = NULL) {
   // Make sure that context variable is not empty
-  if(empty($context)) {
+  if (empty($context)) {
   }
 
-  if(empty($conf['node_types'])) {
-    //dpm(t('Please select at least one content type to display on the map'));
+  if (empty($conf['node_types'])) {
+    // dpm(t('Please select at least one content type to display on the map'));
     return;
   }
-  
+
   // Initialize variables
   $block = new StdClass();
   $markers = array();
 
   // Include javascript resources
   $api_key = variable_get('entity_locator_gmap_api_key', '');
-  drupal_add_js('https://maps.googleapis.com/maps/api/js?key='.$api_key.'&sensor=true');
-  drupal_add_js(drupal_get_path('module', 'entity_locator').'/js/entity_locator.js');
-    drupal_add_css(drupal_get_path('module', 'entity_locator').'/css/entity_locator.css');
-  if($conf['map_type'] != 'original'){
+  drupal_add_js('https://maps.googleapis.com/maps/api/js?key=' . $api_key . '&sensor=true');
+  drupal_add_js(drupal_get_path('module', 'entity_locator') . '/js/entity_locator.js');
+  drupal_add_css(drupal_get_path('module', 'entity_locator') . '/css/entity_locator.css');
+  if ($conf['map_type'] != 'original') {
     drupal_add_js('http://maps.stamen.com/js/tile.stamen.js');
   }
 
   // Get the bundle from the pane configuration
   $bundle = array_shift(array_values($conf['node_types']));
-  $entityLocator = new EntityLocator($bundle);
-  $entities_by_country = $entityLocator->get_entities_by_country();
+  $entity_locator = new EntityLocator($bundle);
+  $entities_by_country = $entity_locator->get_entities_by_country();
 
-  foreach($entities_by_country as $entities) {
-    foreach($entities as &$entity) {
+  foreach ($entities_by_country as $entities) {
+    foreach ($entities as &$entity) {
       $place_types = array();
-      if( ! empty($conf['node_category']) ){
+      if (! empty($conf['node_category'])) {
         $wrapper = entity_metadata_wrapper('node', $entity);
         $iterator = $wrapper->$conf['node_category']->getIterator();
-        foreach ($iterator as $EntityDrupalWrapper) {
-          $place_types[] = 'pt-'.$EntityDrupalWrapper->getIdentifier();
+        foreach ($iterator as $entity_drupal_wrapper) {
+          $place_types[] = 'pt-' . $entity_drupal_wrapper->getIdentifier();
         }
       }
       $entity->place_types = $place_types;
 
-      if($entity->location && $entity->location['lid'] != NULL) {
+      if ($entity->location && $entity->location['lid'] != NULL) {
         // Set the markers
         $markers[] = array(
           'title' => $entity->title,
           'lat' => $entity->location['latitude'],
           'lng' => $entity->location['longitude'],
           'types' => $place_types,
-          'places_country' => 'pc-'.strtoupper($entity->location['country']),
+          'places_country' => 'pc-' . strtoupper($entity->location['country']),
         );
       }
     }
@@ -81,12 +81,11 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
     'entities_by_country' => $entities_by_country,
     'countries' => country_get_list(),
     'node_category' => $conf['node_category'],
-    'categories' => $entityLocator->get_categories($conf['node_category']),
-    'mapHeight' => $conf['map_height'],
-    'prependText' => $conf['prepend_text'],
+    'categories' => $entity_locator->get_categories($conf['node_category']),
+    'map_height' => $conf['map_height'],
+    'prepend_text' => $conf['prepend_text'],
   );
   $block->content = theme('entity_locator', $params);
-   
   return $block;
 }
 
@@ -95,17 +94,17 @@ function locator_content_type_render($subtype, $conf, $context = NULL) {
  */
 function locator_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
-  $options = array();  
+  $options = array();
   $node_types = node_type_get_types();
   $vocab_array = array('' => 'None');
 
-  foreach($node_types as $node_type) {
+  foreach ($node_types as $node_type) {
     $options[$node_type->type] = $node_type->name;
     $taxonomy = getTaxonomyFromNodeType($node_type);
-    if(!empty($taxonomy)){
-      $vocab_array[$node_type->name] = $taxonomy;  
+    if (!empty($taxonomy)) {
+      $vocab_array[$node_type->name] = $taxonomy;
     }
-  } 
+  }
 
   // List of all available node types
   $form['node_types'] = array(
@@ -144,7 +143,7 @@ function locator_content_type_edit_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Map height'),
     '#description' => t('Set the map height with unit, like 450px or 80%.'),
-    '#default_value' => !empty($conf['map_height']) ? $conf['map_height'] : '450px',  
+    '#default_value' => !empty($conf['map_height']) ? $conf['map_height'] : '450px',
     '#required' => TRUE,
   );
 
@@ -152,7 +151,7 @@ function locator_content_type_edit_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Type of your locations'),
     '#description' => t('Set text displayed for describe the type of location.'),
-    '#default_value' => !empty($conf['prepend_text']) ? $conf['prepend_text'] : 'List of location',  
+    '#default_value' => !empty($conf['prepend_text']) ? $conf['prepend_text'] : 'List of location',
     '#required' => FALSE,
   );
 
@@ -178,7 +177,7 @@ function getTaxonomyFromNodeType($node_type) {
   $options = array();
   foreach ($fields_info as $field_name => $field) {
     $field_info = field_info_field($field_name);
-    if($field_info['type'] == "taxonomy_term_reference"){
+    if ($field_info['type'] == "taxonomy_term_reference") {
       $options[$field_name] = $field['label'];
     }
   }

@@ -1,11 +1,11 @@
 <?php
 
-class EntityLocator{
+class EntityLocator {
 
-  private $_bundle;
+  protected $bundle;
 
   public function __construct($bundle) {
-    $this->_bundle = $bundle;
+    $this->bundle = $bundle;
   }
 
   /**
@@ -14,8 +14,8 @@ class EntityLocator{
    */
   public function get_entities() {
     $entities = &drupal_static(__FUNCTION__);
-    if(!isset($entities)) {
-      if($cache = cache_get('entity_locator_entities')){
+    if (!isset($entities)) {
+      if ($cache = cache_get('entity_locator_entities')) {
         $entities = $cache->data;
       }
       else {
@@ -26,20 +26,20 @@ class EntityLocator{
     return $entities;
   }
 
-    /**
+  /**
    * Get entities to display on the map.
    * It uses the bundle(s) specified in the Ctools panel configuration.
    */
-  private function _get_entities() {
+  protected function _get_entities() {
     $entities = array();
     $query = new EntityFieldQuery();
 
     $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', $this->_bundle);
+      ->entityCondition('bundle', $this->bundle);
 
     $result = $query->execute();
 
-    if(isset($result['node'])) {
+    if (isset($result['node'])) {
       $entities = entity_load('node', array_keys($result['node']));
     }
     return $entities;
@@ -51,10 +51,11 @@ class EntityLocator{
    */
   public function get_entities_by_country() {
     $entities = &drupal_static(__FUNCTION__);
-    if(!isset($entities)) {
-      if($cache = cache_get('entity_locator_entities_by_country')){
+    if (!isset($entities)) {
+      if ($cache = cache_get('entity_locator_entities_by_country')) {
         $entities = $cache->data;
-      } else {
+      }
+      else {
         $entities = $this->_get_entities_by_country();
         cache_set('entity_locator_entities_by_country', $entities);
       }
@@ -66,12 +67,12 @@ class EntityLocator{
    * Get entities to display on the map group by country code.
    * It uses the bundle(s) specified in the Ctools panel configuration.
    */
-  private function _get_entities_by_country(){
+  protected function _get_entities_by_country() {
     $entities = $this->get_entities();
-    $entities_by_country =  array();
-    foreach($entities as $entity) {
+    $entities_by_country = array();
+    foreach ($entities as $entity) {
       $country = $entity->location['country'];
-      $entities_by_country[$country][] = $entity; 
+      $entities_by_country[$country][] = $entity;
     }
     return $entities_by_country;
   }
@@ -82,10 +83,11 @@ class EntityLocator{
    */
   public function get_entities_countries() {
     $countries = &drupal_static(__FUNCTION__);
-    if(!isset($countries)) {
-      if($cache = cache_get('entity_locator_entities_countries')){
+    if (!isset($countries)) {
+      if ($cache = cache_get('entity_locator_entities_countries')) {
         $countries = $cache->data;
-      } else {
+      }
+      else {
         $countries = array_keys($this->get_entities_by_country());
         cache_set('entity_locator_entities_countries', $countries);
       }
@@ -98,20 +100,21 @@ class EntityLocator{
    * Get a list of entity taxonmy values.
    * Uses static caching.
    *
-   * @return
+   *  @return array
    *  An array of taxonomy terms entities.
    */
   public function get_categories($field_name) {
     $categories = &drupal_static(__FUNCTION__);
-    if(!isset($categories)) {
-      if($cache = cache_get('entity_locator_' .$field_name. '_list')) {
+    if (!isset($categories)) {
+      if ($cache = cache_get('entity_locator_' . $field_name . '_list')) {
         $categories = $cache->data;
-      } else {
+      }
+      else {
         $field_info = field_info_field($field_name);
         $category_name = $field_info['settings']['allowed_values'][0]['vocabulary'];
         $vocabulary = taxonomy_vocabulary_machine_name_load($category_name);
         $categories = taxonomy_get_tree($vocabulary->vid, 0, NULL, FALSE);
-        cache_set('entity_locator_' .$category_name. '_list', $categories, 'cache');
+        cache_set('entity_locator_' . $category_name . '_list', $categories, 'cache');
       }
     }
     return $categories;

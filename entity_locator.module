@@ -1,7 +1,7 @@
 <?php
 
-/*
- * Implements hook_ctools_plugin_directory -
+/**
+ * Implements hook_ctools_plugin_directory().
  * This lets ctools know to scan my module for a content_type plugin file
  * Detailed docks in ctools/ctools.api.php
  */
@@ -13,7 +13,7 @@ function entity_locator_ctools_plugin_directory($owner, $plugin) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function entity_locator_menu() {
   $items['admin/config/search/entity-locator'] = array(
@@ -38,17 +38,17 @@ function entity_locator_ajax($bundle) {
   $markers = array();
 
   // @todo Use config
-  $entityLocator = new EntityLocator($bundle);
-  $entities = $entityLocator->get_entities();
+  $entity_locator = new EntityLocator($bundle);
+  $entities = $entity_locator->get_entities();
 
-  foreach($entities as $nid => $entity) {
-    if($entity->location && $entity->location['lid'] != NULL) {
+  foreach ($entities as $nid => $entity) {
+    if ($entity->location && $entity->location['lid'] != NULL) {
       $markers[] = array(
         'title' => $entity->title,
         'lat' => $entity->location['latitude'],
         'lng' => $entity->location['longitude'],
       );
-    }  
+    }
   }
 
   // @todo Remove this. Just a test.
@@ -62,15 +62,15 @@ function entity_locator_ajax($bundle) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implements hook_theme().
  */
 function entity_locator_theme() {
   $templates = array();
   $templates['entity_locator_preview'] = array(
-      'template' => 'entity_locator_preview',
+    'template' => 'entity_locator_preview',
   );
   $templates['entity_locator'] = array(
-      'template' => 'entity_locator',
+    'template' => 'entity_locator',
   );
   return $templates;
 }

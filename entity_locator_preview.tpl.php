@@ -1,4 +1,4 @@
-<?php $countriesList = country_get_list(); ?>
+<?php $countries_list = country_get_list(); ?>
 <div id="entity-locator-preview">
   <div class="inside">
     <div class="filters">
@@ -20,7 +20,7 @@
         <div class="select-wrapper">
           <select id="filter_pc" name="filter_pc">
             <?php foreach ($countries as $key => $country) {
-            	echo '<option value="pc-'.strtoupper($country).'">'.$countriesList[strtoupper($country)].'</option>';
+            	echo '<option value="pc-'.strtoupper($country).'">'.$countries_list[strtoupper($country)].'</option>';
             } ?>
           </select>
         </div>
