@@ -13,7 +13,7 @@
         <option value=""><?php echo t('Pays'); ?> :</option>
           <?php foreach (array_keys($entities_by_country) as $key) : ?>
             <option value="pc-<?php echo strtoupper($key); ?>"><?php echo $countries[strtoupper($key)]; ?></option>
-          <?php endf; ?>
+          <?php endforeach; ?>
       </select>
     </div>
   </div>
